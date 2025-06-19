@@ -38,9 +38,13 @@ def menu():
 def comprar_entrada():
     print("COMPRAR ENTRADA")
     nombre=validar_nombre("Ingrese nombre del comprador: ")
+    if validar_nombre_existente(nombre):
+        print("Nombre existente!")
+        return
+    
     tipoE=validar_tipo()
-    codigo=input("Ingrese código: ")
 
+    codigo=validar_codigo()
     compra={
         "nombre":nombre,
         "tipo":tipoE,
@@ -51,6 +55,10 @@ def comprar_entrada():
 
 def consultar_compra():
     print("CONSULTAR COMPRADOR")
+    if validar_lista_vacia():
+        print("No existen compras")
+        return
+    
     nombre=validar_nombre("Ingrese nombre del comprador a buscar: ")
     for c in compras:
         if nombre==c["nombre"]:
@@ -60,6 +68,10 @@ def consultar_compra():
 
 def cancelar_compra():
     print("CANCELAR COMPRA")
+    if validar_lista_vacia():
+        print("No existen compras!")
+        return
+
     nombre=validar_nombre("Ingrese nombre del comprador a cancelar compra: ")
     for c in compras:
         if nombre==c["nombre"]:
@@ -88,9 +100,23 @@ def validar_tipo():
 
 
 def validar_codigo():
-    pass
+    import re
+    while True:
+        codigo=input("Ingrese código: ")
+        if re.match(r"^(?=.*[A-Z])(?=.*\d)(?!.*\s).{6,}$",codigo):
+            return codigo
+        print("Error! el codigo debe tener mayúscula,1 numero y debe tener 6 letras")
+
+
 def validar_lista_vacia():
-    pass
-def validar_nombre_existente():
-    pass
+    if not compras: 
+        return True
+    return False
+
+def validar_nombre_existente(nombre):
+    for c in compras:
+        if nombre==c["nombre"]:
+            return True
+    return False
+            
 
